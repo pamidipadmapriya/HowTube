@@ -1,5 +1,5 @@
-<?php $vid = $_REQUEST['v']; ?>
-
+<?php include "config.php"; 
+$vid = $_REQUEST['v']; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,10 +21,9 @@
 </script>
 
 <script>
-var key = "AIzaSyDRCGfzxr2aSZiNt-pM2dwOHiGes4d7lks";
 function getVideodetails(vid){
 // https://www.googleapis.com/youtube/v3/videos?id=UYOV7NPuyp4&key=AIzaSyDRCGfzxr2aSZiNt-pM2dwOHiGes4d7lks&part=snippet,statistics&fields=items(id,snippet,statistics)
-var url = "https://www.googleapis.com/youtube/v3/videos?id="+vid+"&key="+key+"&part=snippet,statistics&fields=items(id,snippet,statistics)";
+var url = "https://www.googleapis.com/youtube/v3/videos?id="+vid+"&key=<?php echo KEY; ?>&part=snippet,statistics&fields=items(id,snippet,statistics)";
 // get JSON-formatted data from the server
 $.getJSON(url, function( resp ) {
 	var x = resp["items"];
@@ -44,15 +43,14 @@ $.getJSON(url, function( resp ) {
 
 $(document).ready(function(){
  getVideodetails('<?php echo $vid; ?>');
+ getRelatedVideos('<?php echo $vid; ?>')
 });
 
-function getRelatedVideos (){
-	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId=UYOV7NPuyp4&type=video&key="+key;
+function getRelatedVideos (vid){
+	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId="+vid+"&type=video&key=<?php echo KEY; ?>";
 }
 </script>
 
-   
-	 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -69,11 +67,11 @@ function getRelatedVideos (){
 <div class="dropdown pull-right">
   <a data-toggle="dropdown" href="#">UPLOAD<i class="glyphicon glyphicon-cloud-upload"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-   <li><a href="#">Category 1</a></li>
-    <li><a href="#">Category 2</a></li>
-	 <li><a href="#">Category 3</a></li>
-	  <li><a href="#">Category 5</a></li>
-	   <li><a href="#">Category 5</a></li>
+   <?php
+foreach($categories as $key=>$val) {
+	echo '<li><a href="'.$val.'">'.$key.'</a></li>';
+}
+?>
   </ul>
 </div></div>
 </div>
@@ -88,15 +86,11 @@ function getRelatedVideos (){
 </div>
 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 <ul class="nav navbar-nav">
-<li><a href="#">Food</a></li>
-<li><a href="#">Health</a></li>
-<li><a href="#">Money & Business</a></li>
-<li><a href="#">Perenting</a></li>
-<li><a href="#">Tech</a></li>
-<li><a href="#">Beauty</a></li>
-<li><a href="#">Diy </a></li>
-<li><a href="#">Relationships</a></li>
-<li><a href="#">Sports</a></li>
+<?php
+foreach($categories as $key=>$val) {
+	echo '<li><a href="'.$val.'">'.$key.'</a></li>';
+}
+?>
 </ul>
 </div>
 </div>
@@ -106,9 +100,11 @@ function getRelatedVideos (){
 <div class="container">
 <div class="col-lg-8">
 <div class="left-panel">
-<div class="video-play"><object width="730" height="405"><param name="movie" value="//www.youtube.com/v/<?php echo $vid; ?>?hl=en_US&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/<?php echo $vid; ?>?hl=en_US&amp;version=3" type="application/x-shockwave-flash" width="730" height="405" allowscriptaccess="always" allowfullscreen="true"></embed></object></div>
-<!-- <div class="video-play"><object width="730" height="405"><param name="movie" value="//www.youtube.com/v/Os64PrbnCmc?hl=en_US&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/Os64PrbnCmc?hl=en_US&amp;version=3" type="application/x-shockwave-flash" width="730" height="405" allowscriptaccess="always" allowfullscreen="true"></embed></object></div> -->
-<!--Eof video play-->
+<div class="video-play">
+<iframe width="730" height="405" src="//www.youtube.com/embed/<?php echo $vid; ?>" frameborder="0" allowfullscreen></iframe>
+
+<!--<object width="730" height="405"><param name="movie" value="//www.youtube.com/v/<?php echo $vid; ?>?hl=en_US&amp;version=3"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube.com/v/<?php echo $vid; ?>?hl=en_US&amp;version=3" type="application/x-shockwave-flash" width="730" height="405" allowscriptaccess="always" allowfullscreen="true"></embed></object>-->
+</div>
 
 <div class="video-content">
 
