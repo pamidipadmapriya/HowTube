@@ -25,7 +25,8 @@
 
 <script src="js/owl.carousel.js"></script>
 <script>
-    $(document).ready(function() {
+    // $(document).ready(function() {
+	function startSlider(){
       $("#owl-demo").owlCarousel({
 	   	autoPlay: 3000, //Set AutoPlay to 3 seconds
         items : 6,
@@ -39,7 +40,8 @@
         navigation : true,
 		stopOnHover:true
       });
-    });
+	  }
+    // });
 </script>
 
 <script src="js/modernizr.custom.js"></script>
@@ -76,7 +78,7 @@ $.getJSON(url, function( resp ) {
 		var title = value.snippet.title;
 		// var desc = value.snippet.description;
 		var channelTitle = value.snippet.channelTitle;
-		$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By '+channelTitle+'</div><div class="views-count">91,944 Views <span class="time">1 month ago</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
+		$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By '+channelTitle+'</div><div class="views-count">91,944 Views <span class="time">1 month ago</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
 		
 		// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
 		// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
@@ -86,7 +88,26 @@ $.getJSON(url, function( resp ) {
 	MyAnimOnScroll();
 });
 }
+
+function getSliderVideos(){
+var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=how to&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults=10";
+// alert (url);
+
+// get JSON-formatted data from the server
+$.getJSON(url, function( resp ) {
+	var x = resp["items"];
+	nextPageToken = resp["nextPageToken"];
+	$.each(x,function(key, value){
+		var vid = value.id.videoId;
+		var title = value.snippet.title;
+		$('<div class="item"><a href="play.php?v='+vid+'"><img src="https://i1.ytimg.com/vi/'+vid+'/mqdefault.jpg" title="'+title+'" width="170" height="120"/></a></div>').appendTo("#owl-demo");
+	});
+	startSlider();
+});
+}
+
 $(document).ready(function(){
+getSliderVideos();
  makeCall("");
 });
 </script>
@@ -139,9 +160,9 @@ foreach($categories as $key=>$val) {
  <div class="latest-title-mobile">Latest Videos</div>
  <div class="latest-title"><img src="images/latest-videos-title.png"/></div>
  <div id="owl-demo" class="owl-carousel">
-    <div class="item"> <a href="#"><img src="images/scroll-video-1.jpg"/></a></div>
+   <!--<div class="item"> <a href="#"><img src="images/scroll-video-1.jpg"/></a></div>
     <div class="item"> <a href="#"> <img src="images/scroll-video-2.jpg"/></a></div>
-   <div class="item"><a href="#"><img src="images/scroll-video-3.jpg"/></a></div>
+    <div class="item"><a href="#"><img src="images/scroll-video-3.jpg"/></a></div>
    <div class="item"><a href="#"><img src="images/scroll-video-4.jpg"/></a></div>
    <div class="item"><a href="#"> <img src="images/scroll-video-2.jpg"/></a></div>
     <div class="item"><a href="#"> <img src="images/scroll-video-3.jpg"/></a></div>
@@ -150,7 +171,7 @@ foreach($categories as $key=>$val) {
    <div class="item"><a href="#"><img src="images/scroll-video-3.jpg"/></a></div>
    <div class="item"><a href="#"><img src="images/scroll-video-4.jpg"/></a></div>
    <div class="item"><a href="#"> <img src="images/scroll-video-2.jpg"/></a></div>
-    <div class="item"><a href="#"> <img src="images/scroll-video-3.jpg"/></a></div>
+    <div class="item"><a href="#"> <img src="images/scroll-video-3.jpg"/></a></div> -->
  </div>
 	<!--<div id="myCarousel" class="carousel slide" data-ride="carousel">
 	
