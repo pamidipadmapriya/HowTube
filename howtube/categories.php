@@ -1,53 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-	
-	
- 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>How Tube</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Categories Page</title>
 <link href="css/style.css" rel="stylesheet" type="text/css" />
 <link href="css/bootstrap.css" rel="stylesheet">
-	<link href="css/carousel.css" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="css/component.css" />
-		 <link href="css/owl.carousel.css" rel="stylesheet">
-	
+<link href="css/carousel.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/component.css" />
+<link href="css/owl.carousel.css" rel="stylesheet">
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="js/bootstrap.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/carousels.js"></script>
 
-		<script type="text/javascript" src="js/jquery.sticky.js"></script>
-		<script>
+<script type="text/javascript" src="js/jquery.sticky.js"></script>
+<script>
   $(document).ready(function(){
     $("nav").sticky({topSpacing:0});
   });
 </script>
 
-    <script src="js/owl.carousel.js"></script>
-	 <script>
-    $(document).ready(function() {
+<script src="js/owl.carousel.js"></script>
+<script>
+$(document).ready(function() {
 
-      $("#owl-demo").owlCarousel({
-	   	autoPlay: 3000, //Set AutoPlay to 3 seconds
-        items : 6,
-		 itemsDesktop : [1000,5], //5 items between 1000px and 901px
-         itemsDesktopSmall : [900,4], // betweem 900px and 601px
-         itemsTablet: [600,3], //2 items between 600 and 0
-         itemsMobile : [600,2], // itemsMobile disabled - inherit from itemsTablet option
-        lazyLoad : true,
-		lazyFollow : true,
-		lazyEffect:"fade",
-        navigation : true,
-		stopOnHover:true
-		
-      });
+  $("#owl-demo").owlCarousel({
+    autoPlay: 3000, //Set AutoPlay to 3 seconds
+    items : 6,
+    itemsDesktop : [1000,5], //5 items between 1000px and 901px
+    itemsDesktopSmall : [900,4], // betweem 900px and 601px
+    itemsTablet: [600,3], //2 items between 600 and 0
+    itemsMobile : [600,2], // itemsMobile disabled - inherit from itemsTablet option
+    lazyLoad : true,
+    lazyFollow : true,
+    lazyEffect:"fade",
+    navigation : true,
+    stopOnHover:true
+  });
 
-    });
-    </script>
+});
+</script>
 
-	<script src="js/modernizr.custom.js"></script>
-   
+<script src="js/modernizr.custom.js"></script>
+
 	 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -59,34 +56,45 @@
 <script>
 var maxResults = "20";
 var nextPageToken = "";
-function makeCall(pageToken){
-var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=soccer&type=video&videoDefinition=high&key=AIzaSyDRCGfzxr2aSZiNt-pM2dwOHiGes4d7lks&maxResults="+maxResults;
 
-if(pageToken != ""){
-	url=url+"&pageToken="+nextPageToken;
+
+function makeCall(pageToken,categoryName){
+  var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+categoryName+"&type=video&videoDefinition=high&key=AIzaSyDRCGfzxr2aSZiNt-pM2dwOHiGes4d7lks&maxResults="+maxResults;
+
+  if(pageToken != ""){
+    url=url+"&pageToken="+nextPageToken;
+  }
+
+  // get JSON-formatted data from the server
+  $.getJSON(url, function( resp ) {
+    var x = resp["items"];
+    nextPageToken = resp["nextPageToken"];
+    $.each(x,function(key, value){
+      var vid = value.id.videoId;
+      var title = value.snippet.title;
+      // var desc = value.snippet.description;
+      $('<li class="brick"><a href="video-play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By Tampa,FL</div><div class="views-count">91,944 Views <span class="time">1 month ago</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
+      
+      // $("#img_small").attr("src",value.snippet.thumbnails.default.url);
+      // $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
+      // $("#img_large").attr("src",value.snippet.thumbnails.high.url);
+      // exit;
+    });
+    MyAnimOnScroll();
+  });
 }
 
-// get JSON-formatted data from the server
-$.getJSON(url, function( resp ) {
-	var x = resp["items"];
-	nextPageToken = resp["nextPageToken"];
-	$.each(x,function(key, value){
-		var vid = value.id.videoId;
-		var title = value.snippet.title;
-		// var desc = value.snippet.description;
-		$('<li class="brick"><a href="video-play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By Tampa,FL</div><div class="views-count">91,944 Views <span class="time">1 month ago</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
-		
-		// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
-		// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
-		// $("#img_large").attr("src",value.snippet.thumbnails.high.url);
-		// exit;
-	});
-	MyAnimOnScroll();
-});
-}
 $(document).ready(function(){
- makeCall("");
+
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('?');
+  var sParameterName = sURLVariables[0].split('=');
+  var categoryName = sParameterName[1];
+
+  makeCall("",categoryName);
+
 });
+
 </script>
 </head>
 <body>
