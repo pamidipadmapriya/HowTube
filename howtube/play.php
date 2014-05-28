@@ -41,14 +41,27 @@ $.getJSON(url, function( resp ) {
 });
 }
 
+var nextPageToken = "";
+function getRelatedVideos (vid,pageToken){
+	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId="+vid+"&type=video&maxResults=10&key=<?php echo KEY; ?>";
+	if(pageToken != ""){
+		url=url+"&pageToken="+nextPageToken;
+	}
+	// alert(url);
+	$.getJSON(url, function( resp ) {
+		var x = resp["items"];
+		nextPageToken = resp["nextPageToken"];
+		$.each(x,function(key, value){
+			var vid = value.id.videoId;
+			$('<li><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/mqdefault.jpg" width="173" height="97" /></a><h5><a href="play.php?v='+vid+'">'+value.snippet.title+'</a></h5><span>by '+value.snippet.channelTitle+'</span><span>58,486 views</span></li>').appendTo("#related_videos");
+		});
+	});
+}
+
 $(document).ready(function(){
  getVideodetails('<?php echo $vid; ?>');
- getRelatedVideos('<?php echo $vid; ?>')
+ getRelatedVideos('<?php echo $vid; ?>','');
 });
-
-function getRelatedVideos (vid){
-	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&relatedToVideoId="+vid+"&type=video&key=<?php echo KEY; ?>";
-}
 </script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -196,8 +209,8 @@ Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 
 <div class="suggested-videos">
 <h3>Related Videos</h3>
-<ul>
-<li> <a href="#"> <img src="images/related-video-1.jpg"/></a>
+<ul id="related_videos">
+<!-- <li> <a href="#"> <img src="images/related-video-1.jpg"/></a>
 <h5><a href="#">Mix - LMFAO - Party Rock  Anthem ft. Lauren Bennett</a></h5>
 <span>by Disney MusicVEVO</span>
 <span>58,486 views</span>
@@ -225,15 +238,15 @@ Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 <h5><a href="#">Mix - LMFAO - Party Rock  Anthem ft. Lauren Bennett</a></h5>
 <span>by Disney MusicVEVO</span>
 <span>58,486 views</span>
-</li>
+</li> 
 
 <li> <a href="#"> <img src="images/related-video-1.jpg"/></a>
 <h5><a href="#">Mix - LMFAO - Party Rock  Anthem ft. Lauren Bennett</a></h5>
 <span>by Disney MusicVEVO</span>
 <span>58,486 views</span>
-</li>
-<a href="#" class="loadmore-button">Load more suggetions</a>
+</li> -->
 </ul>
+<a href="javascript:void(0);" onclick="getRelatedVideos('<?php echo $vid; ?>',nextPageToken);" class="loadmore-button">Load more suggetions</a>
 </div>
 
 <div class="right-ad"><img src="images/banner-ad-1.gif"/></div>
