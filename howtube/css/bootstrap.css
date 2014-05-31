@@ -4141,7 +4141,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-radius: 4px;
 }
 .pagination > li {
-  display: inline;
+  display: inline-block;
+  margin:0 3px;
 }
 .pagination > li > a,
 .pagination > li > span {
@@ -4150,10 +4151,12 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   padding: 6px 12px;
   margin-left: -1px;
   line-height: 1.42857143;
-  color: #428bca;
+  color: #313131;
   text-decoration: none;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  border: 1px solid #dcdcdc;
+  border-radius:4px;
+  font-weight:bold;
 }
 .pagination > li:first-child > a,
 .pagination > li:first-child > span {
@@ -4170,9 +4173,9 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .pagination > li > span:hover,
 .pagination > li > a:focus,
 .pagination > li > span:focus {
-  color: #2a6496;
-  background-color: #eee;
-  border-color: #ddd;
+  color: #313131;
+  background-color: #eeeded;
+  border-color: #dcdcdc;
 }
 .pagination > .active > a,
 .pagination > .active > span,
@@ -4183,8 +4186,8 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   z-index: 2;
   color: #fff;
   cursor: default;
-  background-color: #428bca;
-  border-color: #428bca;
+  background-color: #c90000;
+  border-color: #dcdcdc;
 }
 .pagination > .disabled > span,
 .pagination > .disabled > span:hover,

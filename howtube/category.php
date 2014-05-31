@@ -56,11 +56,7 @@
 
 <script>
 var maxResults = '<?php echo MAX_SEARCH_RESULTS; ?>';
-var q = "";
-<?php
-foreach($categories as $key=>$val) { ?>
-	q=q+" <?php echo $key; ?>";
-<?php } ?>
+var q = "<?php echo $_REQUEST['c']; ?>";
 var nextPageToken = "";
 function makeCall(pageToken){
 var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults="+maxResults;
@@ -90,7 +86,9 @@ $.getJSON(url, function( resp ) {
 }
 
 function getSliderVideos(){
-var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=how to&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults=10";
+var q = "how to <?php echo $_REQUEST['c']; ?>";
+// alert(q);
+var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults=10";
 // alert (url);
 
 // get JSON-formatted data from the server
@@ -116,22 +114,19 @@ getSliderVideos();
 <header>
 <div class="container">
 <div class="col-lg-3"><a href="#"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
-<div class="col-lg-7">
-<form method="GET" action="search.php" >
-	<input type="text" name="q" placeholder="Search Videos & Guides" class="search">
-	<input type="submit" class="btn btn-warning" value="Search">
-</form></div>
+<div class="col-lg-7"><input type="text" placeholder="Search Videos & Guides" class="search"><input type="submit" class="btn btn-warning" value="Search"></div>
 <div class="col-lg-2 category-drop">
-<div class="dropdown pull-right">
+<!-- <div class="dropdown pull-right">
   <a data-toggle="dropdown" href="javascript:void(0);">CATEGORIES<i class="glyphicon glyphicon-th"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
   <?php
-foreach($categories as $key=>$val) {
-	echo '<li><a href="'.$val.'">'.$key.'</a></li>';
-}
+// foreach($categories as $key=>$val) {
+	// echo '<li><a href="'.$val.'">'.$key.'</a></li>';
+// }
 ?>
   </ul>
-</div></div>
+</div> -->
+</div>
 </div>
 </header>
 <!--Eof Header-->
@@ -144,11 +139,7 @@ foreach($categories as $key=>$val) {
 </div>
 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 <ul class="nav navbar-nav">
-<?php
-foreach($categories as $key=>$val) {
-	echo '<li><a href="'.$val.'">'.$key.'</a></li>';
-}
-?>
+<?php echo "<li><a href='javascript:void(0);'>".$_REQUEST['c']."</a></li>"; ?>
 </ul>
 </div>
 </div>

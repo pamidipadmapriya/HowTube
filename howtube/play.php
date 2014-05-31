@@ -78,7 +78,7 @@ $(document).ready(function(){
 <div class="col-lg-7"><input type="text" placeholder="Search Videos & Guides" class="search"><input type="submit" class="btn btn-warning" value="Search"></div>
 <div class="col-lg-2 category-drop">
 <div class="dropdown pull-right">
-  <a data-toggle="dropdown" href="#">UPLOAD<i class="glyphicon glyphicon-cloud-upload"></i></a>
+  <a data-toggle="dropdown" href="javascript:void(0);">UPLOAD<i class="glyphicon glyphicon-cloud-upload"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
    <?php
 foreach($categories as $key=>$val) {
@@ -163,7 +163,7 @@ foreach($categories as $key=>$val) {
 
 <div id="user-comments-header">
 <h3>All Comments(157)</h3>
-<span class="red pull-right"><a href="#">Top Comments  <i class="caret"></i></a></span>
+<span class="red pull-right"><a href="javascript:void(0);">Top Comments  <i class="caret"></i></a></span>
 </div>
 <div class="user-comments">
 <ul>
@@ -173,7 +173,7 @@ foreach($categories as $key=>$val) {
 <p>Et magna natoque sed amet? Facilisis dolor egestas nisi risus in, parturient ultricies? Adipiscing. Cras! 
 Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 </div>
-<span class="reply"><a href="#">Reply <i class="glyphicon glyphicon glyphicon-thumbs-up"></i> <i class="glyphicon glyphicon glyphicon-thumbs-down"></i></a></span>
+<span class="reply"><a href="javascript:void(0);">Reply <i class="glyphicon glyphicon glyphicon-thumbs-up"></i> <i class="glyphicon glyphicon glyphicon-thumbs-down"></i></a></span>
 </li>
 
 <li>
@@ -181,7 +181,7 @@ Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 <div class="col-lg-11"><h5> Balssem Agoummadane</h5><span class="daysago">50 days ago</span>
 <p>Et magna natoque sed amet? Facilisis dolor egestas nisi risus in, parturient ultricies? </p>
 </div>
-<span class="reply"><a href="#">Reply <i class="glyphicon glyphicon glyphicon-thumbs-up"></i> <i class="glyphicon glyphicon glyphicon-thumbs-down"></i></a></span>
+<span class="reply"><a href="javascript:void(0);">Reply <i class="glyphicon glyphicon glyphicon-thumbs-up"></i> <i class="glyphicon glyphicon glyphicon-thumbs-down"></i></a></span>
 </li>
 
 <li>
@@ -189,9 +189,9 @@ Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 <div class="col-lg-11"><h5> Balssem Agoummadane</h5><span class="daysago">50 days ago</span>
 <p>Et magna natoque sed amet? Facilisis dolor egestas nisi risus</p>
 </div>
-<span class="reply"><a href="#">Reply <i class="glyphicon glyphicon glyphicon-thumbs-up"></i> <i class="glyphicon glyphicon glyphicon-thumbs-down"></i></a></span>
+<span class="reply"><a href="javascript:void(0);">Reply <i class="glyphicon glyphicon glyphicon-thumbs-up"></i> <i class="glyphicon glyphicon glyphicon-thumbs-down"></i></a></span>
 </li>
-<a href="#" class="showmore-button">show more</a>
+<a href="javascript:void(0);" class="showmore-button">show more</a>
 </ul>
 </div>
 <!--Eof User comments-->
@@ -257,19 +257,7 @@ Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 </section>
 
 <!--Sof Footer-->
-<footer>
-<div class="container">
-<ul class="footer-links">
-<li><a href="#">About Howtube</a></li>
-<li><a href="#">Advertising</a></li>
-<li><a href="#">Businesses</a></li>
-<li><a href="#">Terms& Privacy</a></li>
-<li><a href="#">Sitemap</a></li>
-<li><a href="#">International</a></li>
-<li><a href="#">Help</a></li>
-</ul>
-</div>
-</footer>
+<?php include "footer.php"; ?>
 <!--Eof Footer-->
  
 </body>
