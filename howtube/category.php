@@ -113,8 +113,11 @@ getSliderVideos();
 <body>
 <header>
 <div class="container">
-<div class="col-lg-3"><a href="#"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
-<div class="col-lg-7"><input type="text" placeholder="Search Videos & Guides" class="search"><input type="submit" class="btn btn-warning" value="Search"></div>
+<div class="col-lg-3"><a href="index.php"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
+<div class="col-lg-7"><form method="GET" action="search.php" >
+	<input type="text" name="q" placeholder="Search Videos & Guides" class="search">
+	<input type="submit" class="btn btn-warning" value="Search">
+</form></div>
 <div class="col-lg-2 category-drop">
 <!-- <div class="dropdown pull-right">
   <a data-toggle="dropdown" href="javascript:void(0);">CATEGORIES<i class="glyphicon glyphicon-th"></i></a>

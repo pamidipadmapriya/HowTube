@@ -66,7 +66,7 @@ $(document).ready(function(){
 <body>
 <header>
 <div class="container">
-<div class="col-lg-3"><a href="index.html"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
+<div class="col-lg-3"><a href="index.php"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
 <div class="col-lg-7"><form method="GET" action="search.php" >
 	<input type="text" name="q" placeholder="Search Videos & Guides" class="search" value="<?php echo $q; ?>">
 	<input type="submit" class="btn btn-warning" value="Search">
