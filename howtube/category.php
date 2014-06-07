@@ -58,31 +58,76 @@
 var maxResults = '<?php echo MAX_SEARCH_RESULTS; ?>';
 var q = "<?php echo $_REQUEST['c']; ?>";
 var nextPageToken = "";
-function makeCall(pageToken){
-var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults="+maxResults;
-// alert (url);
-if(pageToken != ""){
-	url=url+"&pageToken="+nextPageToken;
+var DateDiff = { 
+    inDays: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+ 
+        return parseInt((t2-t1)/(24*3600*1000));
+    },
+ 
+    inWeeks: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+ 
+        return parseInt((t2-t1)/(24*3600*1000*7));
+    },
+ 
+    inMonths: function(d1, d2) {
+        var d1Y = d1.getFullYear();
+        var d2Y = d2.getFullYear();
+        var d1M = d1.getMonth();
+        var d2M = d2.getMonth();
+ 
+        return (d2M+12*d2Y)-(d1M+12*d1Y);
+    },
+ 
+    inYears: function(d1, d2) {
+        return d2.getFullYear()-d1.getFullYear();
+    }
 }
 
-// get JSON-formatted data from the server
-$.getJSON(url, function( resp ) {
-	var x = resp["items"];
-	nextPageToken = resp["nextPageToken"];
-	$.each(x,function(key, value){
-		var vid = value.id.videoId;
-		var title = value.snippet.title;
-		// var desc = value.snippet.description;
-		var channelTitle = value.snippet.channelTitle;
-		$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By '+channelTitle+'</div><div class="views-count">91,944 Views <span class="time">1 month ago</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
-		
-		// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
-		// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
-		// $("#img_large").attr("src",value.snippet.thumbnails.high.url);
-		// exit;
+var today = new Date("<?php echo Date('Y-m-d'); ?>");
+function getDuration( publishedDate ){
+	var publishedOn = new Date(publishedDate.substr(0,10));
+	var days = DateDiff.inDays(publishedOn, today);
+	if (days > 0){
+		if (days <= 30){
+			return (days+" day(s) ago");
+		} else if (days > 30 && days < 365) {
+			return (Math.floor(days/30)+" month(s) ago");
+		} else if (days > 365) {
+			return (Math.floor(days/365)+" year(s) ago");
+		}
+	}
+}
+
+function makeCall(pageToken){
+	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults="+maxResults;
+	// alert (url);
+	if(pageToken != ""){
+		url=url+"&pageToken="+nextPageToken;
+	}
+
+	// get JSON-formatted data from the server
+	$.getJSON(url, function( resp ) {
+		var x = resp["items"];
+		nextPageToken = resp["nextPageToken"];
+		$.each(x,function(key, value){
+			var vid = value.id.videoId;
+			var title = value.snippet.title;
+			// var desc = value.snippet.description;
+			var channelTitle = value.snippet.channelTitle;
+			var dayss = getDuration(value.snippet.publishedAt);
+			$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By '+channelTitle+'</div><div class="views-count"><span class="time">'+dayss+'</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
+			
+			// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
+			// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
+			// $("#img_large").attr("src",value.snippet.thumbnails.high.url);
+			// exit;
+		});
+		MyAnimOnScroll();
 	});
-	MyAnimOnScroll();
-});
 }
 
 function getSliderVideos(){

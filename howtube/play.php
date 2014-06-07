@@ -21,6 +21,64 @@ $vid = $_REQUEST['v']; ?>
 </script>
 
 <script>
+var DateDiff = { 
+    inDays: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+ 
+        return parseInt((t2-t1)/(24*3600*1000));
+    },
+ 
+    inWeeks: function(d1, d2) {
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+ 
+        return parseInt((t2-t1)/(24*3600*1000*7));
+    },
+ 
+    inMonths: function(d1, d2) {
+        var d1Y = d1.getFullYear();
+        var d2Y = d2.getFullYear();
+        var d1M = d1.getMonth();
+        var d2M = d2.getMonth();
+ 
+        return (d2M+12*d2Y)-(d1M+12*d1Y);
+    },
+ 
+    inYears: function(d1, d2) {
+        return d2.getFullYear()-d1.getFullYear();
+    }
+}
+
+var today = new Date("<?php echo Date('Y-m-d'); ?>");
+function getDuration( publishedDate ){
+	var publishedOn = new Date(publishedDate.substr(0,10));
+	var days = DateDiff.inDays(publishedOn, today);
+	if (days > 0){
+		if (days <= 30){
+			return (days+" day(s) ago");
+		} else if (days > 30 && days < 365) {
+			return (Math.floor(days/30)+" month(s) ago");
+		} else if (days > 365) {
+			return (Math.floor(days/365)+" year(s) ago");
+		}
+	}
+}
+
+var month = new Array();
+month[0] = "January";
+month[1] = "February";
+month[2] = "March";
+month[3] = "April";
+month[4] = "May";
+month[5] = "June";
+month[6] = "July";
+month[7] = "August";
+month[8] = "September";
+month[9] = "October";
+month[10] = "November";
+month[11] = "December";
+
 function getVideodetails(vid){
 // https://www.googleapis.com/youtube/v3/videos?id=UYOV7NPuyp4&key=AIzaSyDRCGfzxr2aSZiNt-pM2dwOHiGes4d7lks&part=snippet,statistics&fields=items(id,snippet,statistics)
 var url = "https://www.googleapis.com/youtube/v3/videos?id="+vid+"&key=<?php echo KEY; ?>&part=snippet,statistics&fields=items(id,snippet,statistics)";
@@ -31,10 +89,12 @@ $.getJSON(url, function( resp ) {
 		// var vid = value.id.videoId;
 		$("#vtitle").html(value.snippet.title);
 		$("#vdesc").html(value.snippet.description);
-		$("#vdateat").html(value.snippet.publishedAt+" by "+value.snippet.channelTitle);
+		var x = new Date(value.snippet.publishedAt);
+		$("#vdateat").html(month[x.getMonth()]+" "+x.getDate()+", "+x.getFullYear()+" by "+value.snippet.channelTitle);
 		$("#vcount").html(value.statistics.viewCount+" views");
 		$("#vlikecount").html(value.statistics.likeCount);
 		$("#vdislikecount").html(value.statistics.dislikeCount);
+		$("#mnts").html(getDuration(value.snippet.publishedAt));
 		//value.statistics.favoriteCount
 		//value.statistics.commentCount
 	});
@@ -53,7 +113,7 @@ function getRelatedVideos (vid,pageToken){
 		nextPageToken = resp["nextPageToken"];
 		$.each(x,function(key, value){
 			var vid = value.id.videoId;
-			$('<li><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/mqdefault.jpg" width="173" height="97" /></a><h5><a href="play.php?v='+vid+'">'+value.snippet.title+'</a></h5><span>by '+value.snippet.channelTitle+'</span><span>58,486 views</span></li>').appendTo("#related_videos");
+			$('<li><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/mqdefault.jpg" width="173" height="97" /></a><h5><a href="play.php?v='+vid+'">'+value.snippet.title+'</a></h5><span>by '+value.snippet.channelTitle+'</span><span></span></li>').appendTo("#related_videos");
 		});
 	});
 }
@@ -80,16 +140,17 @@ $(document).ready(function(){
 	<input type="submit" class="btn btn-warning" value="Search">
 </form></div>
 <div class="col-lg-2 category-drop">
-<div class="dropdown pull-right">
+<!-- <div class="dropdown pull-right">
   <a data-toggle="dropdown" href="javascript:void(0);">UPLOAD<i class="glyphicon glyphicon-cloud-upload"></i></a>
   <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
    <?php
-foreach($categories as $key=>$val) {
-	echo '<li><a href="'.$val.'">'.$key.'</a></li>';
-}
+// foreach($categories as $key=>$val) {
+	// echo '<li><a href="'.$val.'">'.$key.'</a></li>';
+// }
 ?>
   </ul>
-</div></div>
+</div> -->
+</div>
 </div>
 </header>
 <!--Eof Header-->
@@ -131,24 +192,25 @@ foreach($categories as $key=>$val) {
 </div>
 
 <div class="col-lg-3 row pull-right">
-<div class="likes pull-right"><img src="images/like-icon.gif"/><span class="green" id="vlikecount">+2</span>
-<img src="images/dislike-icon.gif"/><span class="red" id="vdislikecount">0</span></div>
-<div class="views pull-right"><span class="red" id="vcount">944 views</span>  6months ago </div>
+<div class="likes pull-right"><img src="images/like-icon.gif"/><span class="green" id="vlikecount"></span>
+<img src="images/dislike-icon.gif"/><span class="red" id="vdislikecount"></span></div>
+<div class="views pull-right"><span class="red" id="vcount"></span><span id="mnts"></span> </div>
 </div>
 </div>
 <div class="clearfix"></div>
-<p id="vdesc">In sit adipiscing in integer in? Amet nunc sed, placerat in porta in lundium in lorem! Sagittis pulvinar, pellentesque cum turpis sit, porttitor sagittis, proin ridiculus enim! Dignissim? In sociis tortor, adipiscing ultricies, cum porttitor elementum nunc arcu parturient? Dolor ut cum, odio magna, quis, amet platea massa est nec, odio dolor dis in mid mattis sociis urna pellentesque purus, lacus a sit tortor ac velit et pellentesque purus! Cum phasellus placerat! Sed adipiscing pellentesque, elementum nunc, eros, nunc ac lorem magna, tincidunt augue! Amet magnis, platea turpis? Integer! Nunc, vel? Egestas risus? Lorem. Lundium lundium? Elementum et vel auctor. Auctor, et sit, tempor eros elementum pulvinar eu, vel hac et sed! Vel turpis ut, ac augue ultrices vel, augue.</p>
+<p id="vdesc"></p>
 
 <div class="clearfix"></div>
 <div class="video-footer">
-<div class="col-lg-7 row">Music video by The Muppets performing The Muppet Show Theme. <span>(C) 2014 Walt Disney Records</span></div>
-<div class="col-lg-6 row pull-right"><strong>Category: <span class="red">Music</span></strong> <strong> License:  <span class="red">Standard YouTube License</span></strong></div>
+<div class="col-lg-7 row"><span></span></div>
+<div class="col-lg-6 row pull-right"><strong><span class="red"></span></strong> <strong> License:  <span class="red">Standard YouTube License</span></strong></div>
 <div class="clearfix"></div>
 </div>
 </div>
 <!--Eof Video Content-->
 
-<div id="comment-box-wrapper">
+
+<!-- <div id="comment-box-wrapper">
 <div class="comment-box">
 <h4>Leave Reply</h4>
 <span class="pull-right">Your email address will not be published.Required fields are marked*</span>
@@ -196,10 +258,10 @@ Lorem et amet turpis cursus etiam augue rhoncus. Cum.</p>
 </li>
 <a href="javascript:void(0);" class="showmore-button">show more</a>
 </ul>
-</div>
+</div> -->
 <!--Eof User comments-->
-<div class="clearfix"></div>
-</div>
+<!-- <div class="clearfix"></div>
+</div> -->
 <!--Eof comment box wrapper-->
 
 </div>
