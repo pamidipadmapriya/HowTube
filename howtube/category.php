@@ -118,8 +118,11 @@ function makeCall(pageToken){
 			var title = value.snippet.title;
 			// var desc = value.snippet.description;
 			var channelTitle = value.snippet.channelTitle;
+			if (channelTitle.length != 0) {
+				channelTitle = "By "+channelTitle;
+			}
 			var dayss = getDuration(value.snippet.publishedAt);
-			$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">By '+channelTitle+'</div><div class="views-count"><span class="time">'+dayss+'</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
+			$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">'+channelTitle+'</div><div class="views-count"><span class="time">'+dayss+'</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
 			
 			// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
 			// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
