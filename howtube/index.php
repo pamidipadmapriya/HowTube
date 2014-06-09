@@ -54,120 +54,14 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-<script>
-var maxResults = '<?php echo MAX_SEARCH_RESULTS; ?>';
-var q = "";
-<?php
-foreach($categories as $key=>$val) { ?>
-	q=q+" <?php echo $key; ?>";
-<?php } ?>
-var nextPageToken = "";
 
-var DateDiff = { 
-    inDays: function(d1, d2) {
-        var t2 = d2.getTime();
-        var t1 = d1.getTime();
- 
-        return parseInt((t2-t1)/(24*3600*1000));
-    },
- 
-    inWeeks: function(d1, d2) {
-        var t2 = d2.getTime();
-        var t1 = d1.getTime();
- 
-        return parseInt((t2-t1)/(24*3600*1000*7));
-    },
- 
-    inMonths: function(d1, d2) {
-        var d1Y = d1.getFullYear();
-        var d2Y = d2.getFullYear();
-        var d1M = d1.getMonth();
-        var d2M = d2.getMonth();
- 
-        return (d2M+12*d2Y)-(d1M+12*d1Y);
-    },
- 
-    inYears: function(d1, d2) {
-        return d2.getFullYear()-d1.getFullYear();
-    }
-}
-
-var today = new Date("<?php echo Date('Y-m-d'); ?>");
-function getDuration( publishedDate ){
-	var publishedOn = new Date(publishedDate.substr(0,10));
-	var days = DateDiff.inDays(publishedOn, today);
-	if (days > 0){
-		if (days <= 30){
-			return (days+" day(s) ago");
-		} else if (days > 30 && days < 365) {
-			return (Math.floor(days/30)+" month(s) ago");
-		} else if (days > 365) {
-			return (Math.floor(days/365)+" year(s) ago");
-		}
-	}
-}
-
-function makeCall(pageToken){
-	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&key=<?php echo KEY; ?>&maxResults="+maxResults;
-
-	if(pageToken != ""){
-		url=url+"&pageToken="+nextPageToken;
-	}
-	// alert (url);
-	// get JSON-formatted data from the server
-	$.getJSON(url, function( resp ) {
-		var x = resp["items"];
-		nextPageToken = resp["nextPageToken"];
-		$.each(x,function(key, value){
-			var vid = value.id.videoId;
-			var title = value.snippet.title;
-			// var desc = value.snippet.description;
-			var channelTitle = value.snippet.channelTitle;
-			if (channelTitle.length != 0) {
-				channelTitle = "By "+channelTitle;
-			}
-			var dayss = getDuration(value.snippet.publishedAt);
-			// alert(dayss);
-			$('<li class="brick"><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">'+channelTitle+'</div><div class="views-count"><span class="time">'+dayss+'</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
-			
-			// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
-			// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
-			// $("#img_large").attr("src",value.snippet.thumbnails.high.url);
-			// exit;
-		});
-		MyAnimOnScroll();
-	});
-}
-
-function getSliderVideos(){
-var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=how to&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00.000Z'; ?>&key=<?php echo KEY; ?>&maxResults=10";
-// alert (url);
-
-// get JSON-formatted data from the server
-$.getJSON(url, function( resp ) {
-	var x = resp["items"];
-	nextPageToken = resp["nextPageToken"];
-	$.each(x,function(key, value){
-		var vid = value.id.videoId;
-		var title = value.snippet.title;
-		$('<div class="item"><a href="play.php?v='+vid+'"><img src="https://i1.ytimg.com/vi/'+vid+'/mqdefault.jpg" title="'+title+'" width="170" height="120"/></a></div>').appendTo("#owl-demo");
-	});
-	startSlider();
-});
-}
-
-$(document).ready(function(){
-getSliderVideos();
- makeCall("");
-});
-</script>
 </head>
 <body>
 <header>
 <div class="container">
-<div class="col-lg-3"><a href="index.php"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
+<div class="col-lg-3"><a href="/"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
 <div class="col-lg-7">
-<form method="GET" action="search.php" >
+<form method="GET" action="/search.php" >
 	<input type="text" name="q" placeholder="Search Videos & Guides" class="search">
 	<input type="submit" class="btn btn-warning" value="Search">
 </form></div>
@@ -253,5 +147,69 @@ foreach($categories as $key=>$val) {
 		}
 	});
 	</script>
+	<script src="js/common.js"></script>
+	<script>
+var maxResults = '<?php echo MAX_SEARCH_RESULTS; ?>';
+var q = "";
+<?php
+foreach($categories as $key=>$val) { ?>
+	q=q+" <?php echo $key; ?>";
+<?php } ?>
+var nextPageToken = "";
+var today = new Date("<?php echo Date('Y-m-d'); ?>");
+function makeCall(pageToken){
+	var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&key=<?php echo KEY; ?>&maxResults="+maxResults;
+
+	if(pageToken != ""){
+		url=url+"&pageToken="+nextPageToken;
+	}
+	// alert (url);
+	// get JSON-formatted data from the server
+	$.getJSON(url, function( resp ) {
+		var x = resp["items"];
+		nextPageToken = resp["nextPageToken"];
+		$.each(x,function(key, value){
+			var vid = value.id.videoId;
+			var title = value.snippet.title;
+			// var desc = value.snippet.description;
+			var channelTitle = value.snippet.channelTitle;
+			if (channelTitle.length != 0) {
+				channelTitle = "By "+channelTitle;
+			}
+			var dayss = getDuration(value.snippet.publishedAt, today);
+			// alert(dayss);
+			$('<li class="brick"><a href="'+makePlayURL(vid)+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'" ></a><div class="info"><h3>'+title+'</h3><div class="vid-info"><div class="user">'+channelTitle+'</div><div class="views-count"><span class="time">'+dayss+'</span></div><div class="clearfix"></div></div></div></li>').appendTo("#grid");
+			
+			// $("#img_small").attr("src",value.snippet.thumbnails.default.url);
+			// $("#img_medium").attr("src",value.snippet.thumbnails.medium.url);
+			// $("#img_large").attr("src",value.snippet.thumbnails.high.url);
+			// exit;
+		});
+		MyAnimOnScroll();
+	});
+}
+
+function getSliderVideos(){
+var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=how to&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00.000Z'; ?>&key=<?php echo KEY; ?>&maxResults=10";
+// alert (url);
+
+// get JSON-formatted data from the server
+$.getJSON(url, function( resp ) {
+	var x = resp["items"];
+	nextPageToken = resp["nextPageToken"];
+	$.each(x,function(key, value){
+		var vid = value.id.videoId;
+		var title = value.snippet.title;
+		$('<div class="item"><a href="'+makePlayURL(vid)+'"><img src="https://i1.ytimg.com/vi/'+vid+'/mqdefault.jpg" title="'+title+'" width="170" height="120"/></a></div>').appendTo("#owl-demo");
+	});
+	startSlider();
+});
+}
+
+$(document).ready(function(){
+getSliderVideos();
+ makeCall("");
+});
+</script>
 </body>
 </html>

@@ -19,43 +19,6 @@ $q = $_REQUEST['q'];?>
     $("nav").sticky({topSpacing:0});
   });
 </script>
-<script>
-var maxResults = '<?php echo MAX_SEARCH_RESULTS; ?>';
-var nextPageToken = "";
-var prevPageToken = "";
-function makeCall(q, pageToken){
-// alert("token: "+pageToken);
-var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults="+maxResults;
-if(pageToken != ""){
-	url=url+"&pageToken="+nextPageToken;
-	$("#grid").html("");
-}
-//alert (url);
-// get JSON-formatted data from the server
-$.getJSON(url, function( resp ) {
-	var x = resp["items"];
-	nextPageToken = resp["nextPageToken"];
-	if(resp["prevPageToken"] != "undefined")
-	{	prevPageToken = resp["prevPageToken"]; }
-	// alert(prevPageToken+", "+nextPageToken);
-	var totalResults = resp["pageInfo"].totalResults;
-	$("#total_results").html("About "+totalResults+" results");
-	$.each(x,function(key, value){
-		var vid = value.id.videoId;
-		var title = value.snippet.title;
-		var desc = value.snippet.description;
-		var channelTitle = value.snippet.channelTitle;
-		$('<li><a href="play.php?v='+vid+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'"></a><h3>'+title+'</h3><span class="time">By '+channelTitle+' .1 month ago . 91,944 Views</span><p>'+desc.substring(0, 100)+'...</p><div class="hd-new">HD</div> <div class="hd-new">NEW</div><div class="clearfix"></div></li>').appendTo("#grid");
-	});
-});
-}
-
-
-$(document).ready(function(){
-	makeCall("<?php echo $q; ?>", nextPageToken);
-});
-</script>
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -66,8 +29,8 @@ $(document).ready(function(){
 <body>
 <header>
 <div class="container">
-<div class="col-lg-3"><a href="index.php"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
-<div class="col-lg-7"><form method="GET" action="search.php" >
+<div class="col-lg-3"><a href="/"><img src="images/howtube-logo.png" alt="How Tube"/></a></div>
+<div class="col-lg-7"><form method="GET" action="/search.php" >
 	<input type="text" name="q" placeholder="Search Videos & Guides" class="search" value="<?php echo $q; ?>">
 	<input type="submit" class="btn btn-warning" value="Search">
 </form></div>
@@ -110,7 +73,7 @@ foreach($categories as $key=>$val) {
 <div class="col-lg-8">
 <div class="search-left-panel">
 <div class="filter-wrapper">
-<div class="btn-group">
+<!-- <div class="btn-group">
  <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown">
     Filters <span class="caret"></span>
   </button>
@@ -121,7 +84,7 @@ foreach($categories as $key=>$val) {
 	  <li><a href="#">Category 5</a></li>
 	   <li><a href="#">Category 5</a></li>
   </ul>
-</div>
+</div> -->
 
 <span class="count pull-right" id="total_results"></span>
 </div>
@@ -250,6 +213,41 @@ foreach($categories as $key=>$val) {
 <!--Sof Footer-->
 <?php include "footer.php"; ?>
 <!--Eof Footer-->
- 
+<script src="/js/common.js"></script>
+ <script>
+var maxResults = '<?php echo MAX_SEARCH_RESULTS; ?>';
+var nextPageToken = "";
+var prevPageToken = "";
+function makeCall(q, pageToken){
+// alert("token: "+pageToken);
+var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&q="+q+"&type=video&videoDefinition=high&order=date&publishedBefore=<?php echo Date('Y-m-d').'T00:00:00Z'; ?>&key=<?php echo KEY; ?>&maxResults="+maxResults;
+if(pageToken != ""){
+	url=url+"&pageToken="+nextPageToken;
+	$("#grid").html("");
+}
+//alert (url);
+// get JSON-formatted data from the server
+$.getJSON(url, function( resp ) {
+	var x = resp["items"];
+	nextPageToken = resp["nextPageToken"];
+	if(resp["prevPageToken"] != "undefined")
+	{	prevPageToken = resp["prevPageToken"]; }
+	// alert(prevPageToken+", "+nextPageToken);
+	var totalResults = resp["pageInfo"].totalResults;
+	$("#total_results").html("About "+totalResults+" results");
+	$.each(x,function(key, value){
+		var vid = value.id.videoId;
+		var title = value.snippet.title;
+		var desc = value.snippet.description;
+		var channelTitle = value.snippet.channelTitle;
+		$('<li><a href="'+makePlayURL(vid)+'"><img src="http://img.youtube.com/vi/'+vid+'/hqdefault.jpg" title="'+title+'"></a><h3>'+title+'</h3><span class="time">By '+channelTitle+' .1 month ago . 91,944 Views</span><p>'+desc.substring(0, 100)+'...</p><div class="hd-new">HD</div> <div class="hd-new">NEW</div><div class="clearfix"></div></li>').appendTo("#grid");
+	});
+});
+}
+
+$(document).ready(function(){
+	makeCall("<?php echo $q; ?>", nextPageToken);
+});
+</script>
 </body>
 </html>

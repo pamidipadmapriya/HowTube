@@ -1,0 +1,80 @@
+RewriteEngine on
+Options -Indexes
+#RewriteCond %{HTTP_HOST} ^howtube.local [NC]
+#RewriteRule ^(.*)$ http://howtube.local/$1 [R=301,NC]
+# URL rewriting rules
+# BEGIN W3TC Browser Cache
+<IfModule mod_deflate.c>
+    <IfModule mod_setenvif.c>
+        BrowserMatch ^Mozilla/4 gzip-only-text/html
+        BrowserMatch ^Mozilla/4\.0[678] no-gzip
+        BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+        BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+    </IfModule>
+    <IfModule mod_headers.c>
+        Header append Vary User-Agent env=!dont-vary
+    </IfModule>
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE text/css application/x-javascript text/x-component text/html text/richtext image/svg+xml text/plain text/xsd text/xsl text/xml image/x-icon
+    </IfModule>
+</IfModule>
+<FilesMatch "\.(css|js|htc|CSS|JS|HTC)$">
+    FileETag None
+    <IfModule mod_headers.c>
+         Header set X-Powered-By "W3 Total Cache/0.9.2.4"
+    </IfModule>
+</FilesMatch>
+<FilesMatch "\.(html|htm|rtf|rtx|svg|svgz|txt|xsd|xsl|xml|HTML|HTM|RTF|RTX|SVG|SVGZ|TXT|XSD|XSL|XML)$">
+    FileETag None
+    <IfModule mod_headers.c>
+         Header set X-Powered-By "W3 Total Cache/0.9.2.4"
+    </IfModule>
+</FilesMatch>
+<FilesMatch "\.(asf|asx|wax|wmv|wmx|avi|bmp|class|divx|doc|docx|eot|exe|gif|gz|gzip|ico|jpg|jpeg|jpe|mdb|mid|midi|mov|qt|mp3|m4a|mp4|m4v|mpeg|mpg|mpe|mpp|otf|odb|odc|odf|odg|odp|ods|odt|ogg|pdf|png|pot|pps|ppt|pptx|ra|ram|svg|svgz|swf|tar|tif|tiff|ttf|ttc|wav|wma|wri|xla|xls|xlsx|xlt|xlw|zip|ASF|ASX|WAX|WMV|WMX|AVI|BMP|CLASS|DIVX|DOC|DOCX|EOT|EXE|GIF|GZ|GZIP|ICO|JPG|JPEG|JPE|MDB|MID|MIDI|MOV|QT|MP3|M4A|MP4|M4V|MPEG|MPG|MPE|MPP|OTF|ODB|ODC|ODF|ODG|ODP|ODS|ODT|OGG|PDF|PNG|POT|PPS|PPT|PPTX|RA|RAM|SVG|SVGZ|SWF|TAR|TIF|TIFF|TTF|TTC|WAV|WMA|WRI|XLA|XLS|XLSX|XLT|XLW|ZIP)$">
+    FileETag None
+    <IfModule mod_headers.c>
+         Header set X-Powered-By "W3 Total Cache/0.9.2.4"
+    </IfModule>
+</FilesMatch>
+# END W3TC Browser Cache
+# BEGIN W3TC Page Cache core
+## EXPIRES CACHING ##
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType image/jpg "access plus 10 years"
+ExpiresByType image/jpeg "access plus 10 years"
+ExpiresByType image/gif "access plus 10 years"
+ExpiresByType image/png "access plus 10 years"
+ExpiresByType text/css "access plus 10 years"
+ExpiresByType application/pdf "access plus 10 years"
+ExpiresByType text/x-javascript "access plus 10 years"
+ExpiresByType application/x-shockwave-flash "access plus 10 years"
+ExpiresByType image/x-icon "access plus 10 years"
+ExpiresDefault "access plus 10 years"
+</IfModule>
+## EXPIRES CACHING ##
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.html\ HTTP/ 
+#RewriteRule ^index\.html$ http://howtube.local/ [R=301,L]
+RewriteRule ^index.html$ index.php [QSA,L,E]
+RewriteRule ^([a-zA-Z0-9_-]+)/play.html$ play.php?v=$1 [nc]
+RewriteRule ^category/([a-zA-Z0-9_-]+).html$ category.php?c=$1 [nc]
+#RewriteRule ^search?q=([a-zA-Z0-9_-]+)$ search.php [nc]
+
+#RewriteRule ^galleries/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)_([0-9]+)_([0-9]+).html$ galleries_viewimage.php?type=$1&gid=$3&image_id=$4 [nc]
+#RewriteRule ^galleries/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_-]+)_([0-9]+).html$ galleries_view.php?type=$1&gid=$3 [L]
+
+
+#RewriteRule ^advertising/$ advertising.php [nc]
+#RewriteRule ^disclaimer/$ disclaimer.php [nc]
+#RewriteRule ^contactus/$ contactus.php [nc]
+# Catch 404 errors
+# These Lines Added By Hosting Company please do not remove
+<IfModule mod_suphp.c>
+suPHP_ConfigPath D:/wamp/www/howtube/
+</IfModule>
+
+<Files php.ini>
+order allow,deny
+deny from all
+</Files>
+# End of Hosting Company Entries
